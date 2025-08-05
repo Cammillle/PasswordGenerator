@@ -28,9 +28,6 @@
             android:name=".data.PasswordProvider"
             android:exported="false"
             android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support."
-                android:resource="file_paths"/>
         </provider>
 
     </application>

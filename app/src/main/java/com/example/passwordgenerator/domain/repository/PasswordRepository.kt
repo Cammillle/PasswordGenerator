@@ -10,7 +10,7 @@ interface PasswordRepository {
 
     fun getPasswordsByFolder(folderId: Int): LiveData<List<Password>>
 
-    suspend fun savePassword(password: Password): Int
+    suspend fun savePassword(password: Password): Long
 
     suspend fun deletePassword(passwordId: Int)
 

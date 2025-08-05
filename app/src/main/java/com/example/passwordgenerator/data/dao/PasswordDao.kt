@@ -17,15 +17,15 @@ interface PasswordDao {
     fun getPasswordsByFolder(folderId: Int): LiveData<List<PasswordEntity>>
 
     @Insert
-    suspend fun insertPassword(password: PasswordEntity): Int
+    suspend fun insertPassword(password: PasswordEntity): Long
 
     @Query("DELETE FROM passwords where id =:passwordId")
     suspend fun deletePassword(passwordId: Int)
 
 
-    suspend fun exportPasswordsToFile(passwords: List<PasswordEntity>, fileUri: Uri) //cursor в dao
+    //suspend fun exportPasswordsToFile(passwords: List<PasswordEntity>, fileUri: Uri) //cursor в dao
 
-    suspend fun importPasswordsFromFile(fileUri: Uri): List<PasswordEntity> //cursor dao
+    //suspend fun importPasswordsFromFile(fileUri: Uri): List<PasswordEntity> //cursor dao
 
 
 }

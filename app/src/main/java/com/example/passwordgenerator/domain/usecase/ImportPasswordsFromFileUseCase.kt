@@ -5,7 +5,7 @@ import com.example.passwordgenerator.domain.model.Password
 import com.example.passwordgenerator.domain.repository.PasswordRepository
 
 class ImportPasswordsFromFileUseCase(private val passwordRepository: PasswordRepository) {
-    suspend operator fun invoke(fileUri: Uri): List<Password> {
-        return passwordRepository.importPasswordsFromFile(fileUri)
+    suspend operator fun invoke(fileName:String): List<Password> {
+        return passwordRepository.importPasswordsFromFile(fileName)
     }
 }

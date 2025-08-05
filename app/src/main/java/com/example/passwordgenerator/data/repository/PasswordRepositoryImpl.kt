@@ -32,7 +32,7 @@ class PasswordRepositoryImpl(
         }
     }
 
-    override suspend fun savePassword(password: Password): Int {
+    override suspend fun savePassword(password: Password): Long {
         return passwordDao.insertPassword(password.toEntity())
     }
 

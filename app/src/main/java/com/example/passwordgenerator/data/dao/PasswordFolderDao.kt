@@ -16,7 +16,7 @@ interface PasswordFolderDao {
     suspend fun getFolderById(folderId: Int): PasswordFolderEntity?
 
     @Insert
-    suspend fun insertFolder(folder: PasswordFolderEntity): Int
+    suspend fun insertFolder(folder: PasswordFolderEntity): Long
 
     @Query("DELETE FROM password_folders WHERE id = :folderId")
     suspend fun deleteFolder(folderId: Int)

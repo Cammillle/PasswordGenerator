@@ -8,12 +8,15 @@ import android.database.Cursor
 import android.database.MatrixCursor
 import android.net.Uri
 import android.os.ParcelFileDescriptor
-import com.example.passwordgenerator.data.dao.PasswordDao
 import java.io.File
 
 class PasswordProvider : ContentProvider() {
-    private lateinit var context: Context
+    //private lateinit var context: Context
 
+
+    override fun onCreate(): Boolean {
+        return true
+    }
     private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH).apply {
         addURI(
             AUTHORITY,
@@ -22,10 +25,7 @@ class PasswordProvider : ContentProvider() {
         )
     }
 
-    override fun onCreate(): Boolean {
-        context = context!!
-        return true
-    }
+
 
     override fun openFile(uri: Uri, mode: String): ParcelFileDescriptor? {
         val file = getFile(uri)
@@ -34,7 +34,7 @@ class PasswordProvider : ContentProvider() {
 
     private fun getFile(uri: Uri): File {
         val fileName = uri.lastPathSegment!!
-        return File(context.filesDir, fileName)
+        return File(context!!.filesDir, fileName)
     }
 
 
