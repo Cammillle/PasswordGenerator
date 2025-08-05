@@ -16,6 +16,8 @@ class PasswordRepositoryImpl(
 
     private val passwordDao = AppDatabase.getInstance(application).passwordDao()
 
+
+
     override fun getAllPasswords(): LiveData<List<Password>> {
         return passwordDao.getAllPasswords().map { list ->
             list.map {

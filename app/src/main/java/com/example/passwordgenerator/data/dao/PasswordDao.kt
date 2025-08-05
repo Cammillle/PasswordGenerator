@@ -13,14 +13,17 @@ interface PasswordDao {
     @Query("SELECT * FROM passwords")
     fun getAllPasswords(): LiveData<List<PasswordEntity>>
 
+    @Query("SELECT * FROM passwords WHERE folder_id IS NULL")
+    fun getGeneratedPasswords(): LiveData<List<PasswordEntity>>
+
     @Query("SELECT * FROM passwords WHERE folder_id =:folderId")
-    fun getPasswordsByFolder(folderId: Int): LiveData<List<PasswordEntity>>
+    fun getPasswordsByFolder(folderId: Long): LiveData<List<PasswordEntity>>
 
     @Insert
     suspend fun insertPassword(password: PasswordEntity): Long
 
     @Query("DELETE FROM passwords where id =:passwordId")
-    suspend fun deletePassword(passwordId: Int)
+    suspend fun deletePassword(passwordId: Long)
 
 
     //suspend fun exportPasswordsToFile(passwords: List<PasswordEntity>, fileUri: Uri) //cursor в dao

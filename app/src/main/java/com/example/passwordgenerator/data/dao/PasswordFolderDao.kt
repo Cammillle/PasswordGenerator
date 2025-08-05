@@ -9,7 +9,7 @@ import com.example.passwordgenerator.data.entity.PasswordFolderEntity
 @Dao
 interface PasswordFolderDao {
 
-    @Query("SELECT * FROM password_folders")
+    @Query("SELECT * FROM folders")
     fun getAllFolders(): LiveData<List<PasswordFolderEntity>>
 
     @Query("SELECT * FROM password_folders WHERE id = :folderId")
