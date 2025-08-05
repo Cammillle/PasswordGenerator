@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.UriMatcher
 import android.database.Cursor
 import android.net.Uri
+import android.os.ParcelFileDescriptor
 
 class PasswordProvider : ContentProvider() {
 
@@ -21,7 +22,9 @@ class PasswordProvider : ContentProvider() {
         )
     }
 
-
+    override fun openFile(uri: Uri, mode: String): ParcelFileDescriptor? {
+        return super.openFile(uri, mode)
+    }
 
     override fun onCreate(): Boolean {
         return true
