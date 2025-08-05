@@ -2,7 +2,6 @@ package com.example.passwordgenerator.data
 
 import android.content.ContentProvider
 import android.content.ContentValues
-import android.content.Context
 import android.content.UriMatcher
 import android.database.Cursor
 import android.database.MatrixCursor
@@ -11,8 +10,6 @@ import android.os.ParcelFileDescriptor
 import java.io.File
 
 class PasswordProvider : ContentProvider() {
-    //private lateinit var context: Context
-
 
     override fun onCreate(): Boolean {
         return true
@@ -26,18 +23,6 @@ class PasswordProvider : ContentProvider() {
     }
 
 
-
-    override fun openFile(uri: Uri, mode: String): ParcelFileDescriptor? {
-        val file = getFile(uri)
-        return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_WRITE)
-    }
-
-    private fun getFile(uri: Uri): File {
-        val fileName = uri.lastPathSegment!!
-        return File(context!!.filesDir, fileName)
-    }
-
-
     override fun query(
         uri: Uri,
         projection: Array<out String>?,
@@ -45,12 +30,6 @@ class PasswordProvider : ContentProvider() {
         selectionArgs: Array<out String>?,
         sortOrder: String?
     ): Cursor? {
-        if (uri.path == "/passwords") {
-            val cursor = MatrixCursor(arrayOf("_display_name", "_size"))
-            val file = getFile(uri)
-            cursor.addRow(arrayOf(file.name, file.length()))
-            return cursor
-        }
         return null
     }
 
@@ -63,11 +42,6 @@ class PasswordProvider : ContentProvider() {
     }
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int {
-        val file = getFile(uri)
-        if (file.exists()) {
-            file.delete()
-            return 1
-        }
         return 0
     }
 
@@ -80,9 +54,14 @@ class PasswordProvider : ContentProvider() {
         return 0
     }
 
+    override fun openFile(uri: Uri, mode: String): ParcelFileDescriptor? {
+        val context = context ?: return null
+        return context.contentResolver.openFileDescriptor(uri,mode)
+    }
+
     companion object {
         const val AUTHORITY = "com.example.passwordgenerator"
-        val CONTENT_URI: Uri = Uri.parse("content://$AUTHORITY")
+        val CONTENT_URI: Uri = Uri.parse("content://$AUTHORITY/passwords")
 
         const val GET_PASSWORDS_QUERY = 100
 
