@@ -22,6 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:authorities="com.example.passwordgenerator"
+            android:name=".data.PasswordProvider"
+            android:exported="true">
+        </provider>
     </application>
 
 </manifest>

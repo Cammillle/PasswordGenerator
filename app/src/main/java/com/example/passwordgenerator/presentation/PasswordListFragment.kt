@@ -9,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.passwordgenerator.R
 import com.example.passwordgenerator.databinding.FragmentFirstBinding
 
-class FirstFragment : Fragment() {
+class PasswordListFragment : Fragment() {
 
     private var _binding: FragmentFirstBinding? = null
     private val binding get() = _binding!!
