@@ -11,7 +11,7 @@ import com.example.passwordgenerator.domain.model.Password
 import com.example.passwordgenerator.domain.repository.PasswordRepository
 
 class PasswordRepositoryImpl(
-    application: Application
+    private val application: Application
 ) : PasswordRepository {
 
     private val passwordDao = AppDatabase.getInstance(application).passwordDao()
@@ -40,11 +40,30 @@ class PasswordRepositoryImpl(
         passwordDao.deletePassword(passwordId)
     }
 
-    override suspend fun exportPasswordsToFile(passwords: List<Password>, fileUri: Uri) {
-        TODO("Not yet implemented")
+    override suspend fun exportPasswordsToFile(passwords: List<Password>, fileName: String) {
+        val uri = Uri.parse("content://com.example.passwordgenerator/passwords/$fileName")
+        val outputStream = application.contentResolver.openOutputStream(uri)
+        outputStream?.use { os ->
+            passwords.forEach { password ->
+                os.write("${password.value}\n".toByteArray())
+            }
+        }
     }
 
-    override suspend fun importPasswordsFromFile(fileUri: Uri): List<Password> {
-        TODO("Not yet implemented")
+    override suspend fun importPasswordsFromFile(fileName: String): List<Password> {
+        val uri = Uri.parse("content://com.example.passwordgenerator/passwords/$fileName")
+        val inputStream = application.contentResolver.openInputStream(uri)
+        return inputStream?.use { isr ->
+            isr.bufferedReader().readLines().map { line ->
+                Password(0, line, 0.0, "")
+            }
+        } ?: emptyList()
     }
+
+    override suspend fun deletePasswordFile(fileName: String) {
+        val uri = Uri.parse("content://com.example.passwordgenerator/passwords/$fileName")
+        application.contentResolver.delete(uri, null, null)
+    }
+
+
 }

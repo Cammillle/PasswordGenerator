@@ -14,9 +14,11 @@ interface PasswordRepository {
 
     suspend fun deletePassword(passwordId: Int)
 
-    suspend fun exportPasswordsToFile(passwords: List<Password>, fileUri: Uri) //cursor в dao
+    suspend fun exportPasswordsToFile(passwords: List<Password>, fileName:String) //cursor в dao
 
-    suspend fun importPasswordsFromFile(fileUri: Uri): List<Password> //cursor dao
+    suspend fun importPasswordsFromFile(fileName:String): List<Password> //cursor dao
+
+    suspend fun deletePasswordFile(fileName:String)
 
 }
 
