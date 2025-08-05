@@ -7,18 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.passwordgenerator.R
-import com.example.passwordgenerator.databinding.FragmentFirstBinding
+import com.example.passwordgenerator.databinding.FragmentPasswordListBinding
 
 class PasswordListFragment : Fragment() {
 
-    private var _binding: FragmentFirstBinding? = null
+    private var _binding: FragmentPasswordListBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentFirstBinding.inflate(inflater, container, false)
+        _binding = FragmentPasswordListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -26,7 +26,7 @@ class PasswordListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.bAdd.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+            findNavController().navigate(R.id.action_passwordListFragment_to_newPasswordFragment)
         }
     }
 
