@@ -17,7 +17,7 @@ data class PasswordEntity(
 ) {
     companion object {
         fun Password.toEntity(): PasswordEntity {
-            return PasswordEntity(id, value, entropy, 0)
+            return PasswordEntity(id, value, entropy, folderId)
         }
 
         fun PasswordEntity.toDomainModel(): Password {

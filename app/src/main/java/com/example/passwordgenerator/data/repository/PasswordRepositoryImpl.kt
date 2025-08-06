@@ -12,6 +12,7 @@ class PasswordRepositoryImpl(
 
     private val passwordDao = AppDatabase.getInstance(application).passwordDao()
 
+
     override suspend fun insert(password: Password): Long {
         return passwordDao.insert(password.toEntity())
     }

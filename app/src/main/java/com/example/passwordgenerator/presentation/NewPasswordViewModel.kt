@@ -3,6 +3,7 @@ package com.example.passwordgenerator.presentation
 import android.app.Application
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.passwordgenerator.data.repository.PasswordFolderRepositoryImpl
@@ -53,7 +54,6 @@ class NewPasswordViewModel(
         useNumbers: Boolean,
         useSpecial: Boolean
     ) {
-
 
         var allowedChars = lowercase
         if (useUppercase) allowedChars += uppercase  //переделать контакенацию
@@ -108,7 +108,7 @@ class NewPasswordViewModel(
                     ?.filter { it.isNotBlank() }
                     ?: emptyList()
 
-                val folderId =
+                val folderId =  //Загружаем папку
                     insertFolderUseCase(
                         PasswordFolder(
                             name = "Папка № ${System.currentTimeMillis()}"
@@ -119,10 +119,9 @@ class NewPasswordViewModel(
                     val entropy = calculateEntropy(line)
                     Password(value = line, entropy = entropy, folderId = folderId)
                 }
+                Log.d("TEST_TEST","${passwordList.toList()}")
+                insertPasswordsUseCase(passwordList)  //загружаем пароли и присваиваем им folderId
 
-                //создать folder  и загрузить с паролями
-
-                insertPasswordsUseCase(passwordList)
                 _eventFlow.emit(UiEvent.Success("Пароли загружены"))
             } catch (e: Exception) {
                 _eventFlow.emit(UiEvent.Error("Ошибка загрузки: ${e.message}"))

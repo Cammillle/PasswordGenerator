@@ -1,15 +1,14 @@
 package com.example.passwordgenerator.presentation
 
+import android.content.ContentValues
+import android.content.Context
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
+import android.os.Environment
+import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
+
 import com.example.passwordgenerator.R
 import com.example.passwordgenerator.data.AppDatabase
 import com.example.passwordgenerator.data.repository.PasswordRepositoryImpl
@@ -27,13 +26,57 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
 
+        lifecycleScope.launch {
+            if(applicationContext.isFirstRun()){
+                applicationContext.copyAssetToMediaStoreIfNotExists("passwords1.txt")
+                applicationContext.copyAssetToMediaStoreIfNotExists("passwords2.txt")
+                applicationContext.copyAssetToMediaStoreIfNotExists("passwords3.txt")
+            }
+        }
+    }
 
+    private suspend fun Context.copyAssetToMediaStoreIfNotExists(fileName: String) {
+        val resolver = contentResolver
 
+        // Проверка, существует ли уже файл
+        val projection = arrayOf(MediaStore.Files.FileColumns.DISPLAY_NAME)
+        val selection = "${MediaStore.Files.FileColumns.DISPLAY_NAME} = ?"
+        val selectionArgs = arrayOf(fileName)
 
+        val queryUri = MediaStore.Files.getContentUri("external")
+        val cursor = resolver.query(queryUri, projection, selection, selectionArgs, null)
 
+        if (cursor?.moveToFirst() == true) {
+            cursor.close()
+            return // Файл уже существует
+        }
+        cursor?.close()
 
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Files.FileColumns.DISPLAY_NAME, fileName)
+            put(MediaStore.Files.FileColumns.MIME_TYPE, "text/plain")
+            put(MediaStore.Files.FileColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS + "/YourApp") // Подпапка в Documents
+        }
+
+        val uri = resolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
+
+        uri?.let {
+            assets.open(fileName).use { input ->
+                resolver.openOutputStream(it)?.use { output ->
+                    input.copyTo(output)
+                }
+            }
+        }
+    }
+
+    private fun Context.isFirstRun(): Boolean {
+        val prefs = getSharedPreferences("init_prefs", Context.MODE_PRIVATE)
+        val isFirst = prefs.getBoolean("first_run", true)
+        if (isFirst) {
+            prefs.edit().putBoolean("first_run", false).apply()
+        }
+        return isFirst
     }
 
 

@@ -59,7 +59,7 @@ class NewPasswordFragment : Fragment() {
             }
 
             loadPasswordsFromFileButton.setOnClickListener {
-                openFilePicker()
+                filePickerLauncher.launch(arrayOf("text/plain"))
             }
         }
 
@@ -104,9 +104,6 @@ class NewPasswordFragment : Fragment() {
         }
     }
 
-    private fun openFilePicker() {
-        filePickerLauncher.launch(arrayOf("text/plain"))
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
