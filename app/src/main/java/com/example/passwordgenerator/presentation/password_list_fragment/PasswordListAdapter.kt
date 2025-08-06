@@ -1,4 +1,4 @@
-package com.example.passwordgenerator.presentation.PasswordListFragment
+package com.example.passwordgenerator.presentation.password_list_fragment
 
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +14,6 @@ import com.example.passwordgenerator.domain.model.PasswordListItem
 
 class PasswordListAdapter(
     private val onFolderClick: (PasswordFolder) -> Unit,
-    private val onPasswordClick: (Password) -> Unit,
     private val onDeleteClick: (Password) -> Unit,
     private val onCopyClick: (Password) -> Unit
 ) :
@@ -29,7 +28,7 @@ class PasswordListAdapter(
             itemView.findViewById<ImageView>(R.id.delete_icon).setOnClickListener {
                 onDeleteClick(password)
             }
-            itemView.setOnClickListener { onPasswordClick(password) }
+
 
             password.entropy.let {
                 itemView.findViewById<TextView>(R.id.password_entropy).text =

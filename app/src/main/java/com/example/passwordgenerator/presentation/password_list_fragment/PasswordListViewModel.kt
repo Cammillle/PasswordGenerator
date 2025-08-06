@@ -1,11 +1,17 @@
-package com.example.passwordgenerator.presentation.PasswordListFragment
+package com.example.passwordgenerator.presentation.password_list_fragment
 
 import android.app.Application
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.util.Log
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.application
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.passwordgenerator.data.repository.PasswordFolderRepositoryImpl
 import com.example.passwordgenerator.data.repository.PasswordRepositoryImpl
 import com.example.passwordgenerator.domain.model.Password
@@ -68,6 +74,7 @@ class PasswordListViewModel(
 
     fun deletePassword(password: Password) {
         viewModelScope.launch {
+            Log.d("TEST_TEST",password.toString())
             deletePasswordUseCase(password)
             refreshCurrentState()
         }
@@ -98,6 +105,10 @@ class PasswordListViewModel(
             onFileReady(lines)
         }
     }
+
+
+
+
 
 
 

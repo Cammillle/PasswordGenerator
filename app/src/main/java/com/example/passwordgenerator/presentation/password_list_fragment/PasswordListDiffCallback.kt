@@ -1,4 +1,4 @@
-package com.example.passwordgenerator.presentation.PasswordListFragment
+package com.example.passwordgenerator.presentation.password_list_fragment
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.passwordgenerator.domain.model.PasswordListItem

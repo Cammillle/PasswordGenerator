@@ -1,4 +1,4 @@
-package com.example.passwordgenerator.presentation.NewPasswordFragment
+package com.example.passwordgenerator.presentation.new_password_fragment
 
 import android.app.Application
 import android.content.Context

@@ -21,7 +21,7 @@ data class PasswordEntity(
         }
 
         fun PasswordEntity.toDomainModel(): Password {
-            return Password(value, entropy, folderId)
+            return Password( value, entropy, folderId, id)
         }
     }
 
