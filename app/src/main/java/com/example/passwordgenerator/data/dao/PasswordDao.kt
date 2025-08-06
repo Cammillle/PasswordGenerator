@@ -1,7 +1,5 @@
 package com.example.passwordgenerator.data.dao
 
-import android.net.Uri
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert

@@ -7,13 +7,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
-
-import com.example.passwordgenerator.R
-import com.example.passwordgenerator.data.AppDatabase
-import com.example.passwordgenerator.data.repository.PasswordRepositoryImpl
 import com.example.passwordgenerator.databinding.ActivityMainBinding
-import com.example.passwordgenerator.domain.model.Password
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {

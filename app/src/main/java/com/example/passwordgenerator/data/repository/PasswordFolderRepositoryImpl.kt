@@ -8,7 +8,7 @@ import com.example.passwordgenerator.domain.model.PasswordFolder
 import com.example.passwordgenerator.domain.repository.PasswordFolderRepository
 
 class PasswordFolderRepositoryImpl(
-    private val application: Application
+    application: Application
 ) : PasswordFolderRepository {
 
     private val folderDao = AppDatabase.getInstance(application).passwordFolderDao()

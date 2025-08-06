@@ -4,14 +4,8 @@ import android.app.Application
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.util.Log
-import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.passwordgenerator.data.repository.PasswordFolderRepositoryImpl
 import com.example.passwordgenerator.data.repository.PasswordRepositoryImpl
 import com.example.passwordgenerator.domain.model.Password
@@ -27,7 +21,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class PasswordListViewModel(
-    private val context: Application,
+    context: Application,
     private val clipboardManager: ClipboardManager
     ) : AndroidViewModel(context) {
 
@@ -46,6 +40,7 @@ class PasswordListViewModel(
     private var currentFolder: PasswordFolder? = null
 
     init {
+        _uiState.value = PasswordListUiState.Loading
         loadRoot()
     }
 
@@ -100,7 +95,6 @@ class PasswordListViewModel(
                 is PasswordListUiState.FolderContent -> state.passwords
                 else -> emptyList()
             }
-
             val lines = exportData.map { it.value }
             onFileReady(lines)
         }
