@@ -1,4 +1,4 @@
-package com.example.passwordgenerator.presentation
+package com.example.passwordgenerator.presentation.NewPasswordFragment
 
 import android.net.Uri
 import android.os.Bundle
@@ -21,7 +21,7 @@ class NewPasswordFragment : Fragment() {
     private var _binding: FragmentNewPasswordBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: NewPasswordViewModel by viewModels()  /////???
+    private val viewModel: NewPasswordViewModel by viewModels()
 
     private val filePickerLauncher =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->

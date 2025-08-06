@@ -1,19 +1,13 @@
-package com.example.passwordgenerator.presentation
+package com.example.passwordgenerator.presentation.PasswordListFragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.passwordgenerator.R
-import com.example.passwordgenerator.data.AppDatabase
-import com.example.passwordgenerator.data.dao.PasswordDao
-import com.example.passwordgenerator.data.dao.PasswordFolderDao
 import com.example.passwordgenerator.databinding.FragmentPasswordListBinding
-import com.example.passwordgenerator.domain.model.PasswordListItem
-import kotlinx.coroutines.launch
 
 class PasswordListFragment : Fragment() {
 

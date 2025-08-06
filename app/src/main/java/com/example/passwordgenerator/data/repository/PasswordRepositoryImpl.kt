@@ -2,6 +2,7 @@ package com.example.passwordgenerator.data.repository
 
 import android.app.Application
 import com.example.passwordgenerator.data.AppDatabase
+import com.example.passwordgenerator.data.entity.PasswordEntity.Companion.toDomainModel
 import com.example.passwordgenerator.data.entity.PasswordEntity.Companion.toEntity
 import com.example.passwordgenerator.domain.model.Password
 import com.example.passwordgenerator.domain.repository.PasswordRepository
@@ -26,15 +27,15 @@ class PasswordRepositoryImpl(
     }
 
     override suspend fun getByFolder(folderId: Long): List<Password> {
-        TODO("Not yet implemented")
+        return passwordDao.getByFolder(folderId).map { it.toDomainModel() }
     }
 
     override suspend fun getGenerated(): List<Password> {
-        TODO("Not yet implemented")
+        return passwordDao.getGenerated().map { it.toDomainModel() }
     }
 
     override suspend fun delete(password: Password) {
-        TODO("Not yet implemented")
+        return passwordDao.delete(password.toEntity())
     }
 
     override suspend fun deleteAll() {

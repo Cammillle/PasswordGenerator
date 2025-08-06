@@ -1,4 +1,4 @@
-package com.example.passwordgenerator.presentation
+package com.example.passwordgenerator.presentation.NewPasswordFragment
 
 import android.app.Application
 import android.content.Context
@@ -35,10 +35,10 @@ class NewPasswordViewModel(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    val lowercase = "abcdefghijklmnopqrstuvwxyz"   //создать строковые ресурсы
-    val uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    val numbers = "0123456789"
-    val special = "!@#$%^&*()-_=+[]{}|;:,.<>?/"
+    private val lowercase = "abcdefghijklmnopqrstuvwxyz"   //создать строковые ресурсы
+    private val uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    private val numbers = "0123456789"
+    private val special = "!@#$%^&*()-_=+[]{}|;:,.<>?/"
 
     private val passwordRepository = PasswordRepositoryImpl(application)
     private val folderRepository = PasswordFolderRepositoryImpl(application)

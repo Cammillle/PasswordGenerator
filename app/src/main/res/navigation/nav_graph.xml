@@ -6,7 +6,7 @@
     app:startDestination="@id/passwordListFragment">
     <fragment
         android:id="@+id/passwordListFragment"
-        android:name="com.example.passwordgenerator.presentation.PasswordListFragment"
+        android:name="com.example.passwordgenerator.presentation.PasswordListFragment.PasswordListFragment"
         android:label="fragment_password_list"
         tools:layout="@layout/fragment_password_list" >
         <action
@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/newPasswordFragment"
-        android:name="com.example.passwordgenerator.presentation.NewPasswordFragment"
+        android:name="com.example.passwordgenerator.presentation.NewPasswordFragment.NewPasswordFragment"
         android:label="fragment_new_password"
         tools:layout="@layout/fragment_new_password" >
         <action
