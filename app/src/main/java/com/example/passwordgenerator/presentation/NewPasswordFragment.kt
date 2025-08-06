@@ -1,20 +1,37 @@
 package com.example.passwordgenerator.presentation
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.passwordgenerator.databinding.FragmentNewPasswordBinding
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class NewPasswordFragment : Fragment() {
 
     private var _binding: FragmentNewPasswordBinding? = null
     private val binding get() = _binding!!
 
+    private val viewModel: NewPasswordViewModel by viewModels()  /////???
+
+    private val filePickerLauncher =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+            uri?.let {
+                viewModel.importPasswordsFromFile(requireContext(), it)
+            }
+        }
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentNewPasswordBinding.inflate(inflater, container, false)
         return binding.root
@@ -22,7 +39,73 @@ class NewPasswordFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupListeners()
+        observeViewModel()
+    }
 
+    private fun setupListeners() {
+        with(binding) {
+            generatePasswordButton.setOnClickListener {
+                val length = passwordLength.text.toString().toIntOrNull() ?: 0
+                val useUppercase = useUppercaseCheckbox.isChecked
+                val useNumbers = useNumbersCheckbox.isChecked
+                val useSpecial = useSpecialCharsCheckbox.isChecked
+
+                viewModel.generatePassword(length, useUppercase, useNumbers, useSpecial)
+            }
+
+            savePasswordButton.setOnClickListener {
+                viewModel.saveGeneratedPassword()
+            }
+
+            loadPasswordsFromFileButton.setOnClickListener {
+                openFilePicker()
+            }
+        }
+
+    }
+
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+
+            with(binding) {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    launch {
+                        viewModel.generatedPassword.collect { password ->
+                            generatedPasswordField.setText(password)
+                        }
+                    }
+                    launch {
+                        viewModel.entropy.collect { entropy ->
+                            passwordEntropyField.text = "Entropy: $entropy"
+                        }
+                    }
+                    launch {
+                        viewModel.eventFlow.collectLatest { event ->
+                            when (event) {
+                                is NewPasswordViewModel.UiEvent.Success -> {
+                                    Toast.makeText(
+                                        requireContext(), event.message, Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+
+                                is NewPasswordViewModel.UiEvent.Error -> {
+                                    Toast.makeText(
+                                        requireContext(), event.message, Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
+
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
+    private fun openFilePicker() {
+        filePickerLauncher.launch(arrayOf("text/plain"))
     }
 
     override fun onDestroyView() {

@@ -1,23 +1,20 @@
 package com.example.passwordgenerator.data.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.passwordgenerator.data.entity.PasswordFolderEntity
 
 @Dao
 interface PasswordFolderDao {
 
-    @Query("SELECT * FROM folders")
-    fun getAllFolders(): LiveData<List<PasswordFolderEntity>>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(folder: PasswordFolderEntity): Long
 
-    @Query("SELECT * FROM password_folders WHERE id = :folderId")
-    suspend fun getFolderById(folderId: Int): PasswordFolderEntity?
+    @Query("SELECT * FROM folders ORDER BY id DESC")
+    suspend fun getAll(): List<PasswordFolderEntity>
 
-    @Insert
-    suspend fun insertFolder(folder: PasswordFolderEntity): Long
-
-    @Query("DELETE FROM password_folders WHERE id = :folderId")
-    suspend fun deleteFolder(folderId: Int)
+    @Query("DELETE FROM folders")
+    suspend fun deleteAll()
 }

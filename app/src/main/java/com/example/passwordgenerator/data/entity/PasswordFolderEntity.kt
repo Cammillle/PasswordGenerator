@@ -16,7 +16,7 @@ data class PasswordFolderEntity(
         }
 
         fun PasswordFolderEntity.toDomainModel(): PasswordFolder {
-            return PasswordFolder(id.toInt(), name)
+            return PasswordFolder(name, id)
         }
     }
 }

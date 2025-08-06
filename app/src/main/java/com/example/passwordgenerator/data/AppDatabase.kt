@@ -11,6 +11,7 @@ import com.example.passwordgenerator.data.entity.PasswordFolderEntity
 
 @Database(entities = [PasswordEntity::class, PasswordFolderEntity::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
+
     abstract fun passwordDao(): PasswordDao
     abstract fun passwordFolderDao(): PasswordFolderDao
 

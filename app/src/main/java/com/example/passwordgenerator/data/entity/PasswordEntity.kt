@@ -7,29 +7,21 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.example.passwordgenerator.domain.model.Password
 
-@Entity(
-    tableName = "passwords",
-    foreignKeys = [ForeignKey(
-        entity = PasswordFolderEntity::class,
-        parentColumns = ["id"],
-        childColumns = ["folderId"],
-        onDelete = ForeignKey.CASCADE
-    )],
-    indices = [Index("folderId")]
-)
+@Entity(tableName = "passwords")
 data class PasswordEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
     val value: String,
     val entropy: Double,
-    @ColumnInfo(name = "folder_id") val folderId: Long?
+    val folderId: Long? = null
 ) {
     companion object {
         fun Password.toEntity(): PasswordEntity {
-            return PasswordEntity(id.toLong(), value, entropy, 0)
+            return PasswordEntity(id, value, entropy, 0)
         }
 
         fun PasswordEntity.toDomainModel(): Password {
-            return Password(id.toInt(), value, entropy)
+            return Password(value, entropy, folderId)
         }
     }
 

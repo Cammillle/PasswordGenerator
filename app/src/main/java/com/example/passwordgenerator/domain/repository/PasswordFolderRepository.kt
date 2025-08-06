@@ -5,11 +5,7 @@ import com.example.passwordgenerator.domain.model.PasswordFolder
 
 interface PasswordFolderRepository {
 
-    fun getAllFolders(): LiveData<List<PasswordFolder>>
-
-    suspend fun getFolderById(folderId: Int): PasswordFolder?
-
-    suspend fun saveFolder(folder: PasswordFolder): Int
-
-    suspend fun deleteFolder(folderId: Int)
+    suspend fun insertFolder(folder: PasswordFolder): Long
+    suspend fun getAllFolders(): List<PasswordFolder>
+    suspend fun deleteAllFolders()
 }

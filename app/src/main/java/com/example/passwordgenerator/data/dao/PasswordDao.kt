@@ -3,32 +3,35 @@ package com.example.passwordgenerator.data.dao
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.passwordgenerator.data.entity.PasswordEntity
 
 @Dao
 interface PasswordDao {
 
-    @Query("SELECT * FROM passwords")
-    fun getAllPasswords(): LiveData<List<PasswordEntity>>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(password: PasswordEntity): Long
 
-    @Query("SELECT * FROM passwords WHERE folder_id IS NULL")
-    fun getGeneratedPasswords(): LiveData<List<PasswordEntity>>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(passwords: List<PasswordEntity>)
 
-    @Query("SELECT * FROM passwords WHERE folder_id =:folderId")
-    fun getPasswordsByFolder(folderId: Long): LiveData<List<PasswordEntity>>
+    @Query("SELECT * FROM passwords ORDER BY id DESC")
+    suspend fun getAll(): List<PasswordEntity>
 
-    @Insert
-    suspend fun insertPassword(password: PasswordEntity): Long
+    @Query("SELECT * FROM passwords WHERE folderId IS NULL ORDER BY id DESC")
+    suspend fun getGenerated(): List<PasswordEntity>
 
-    @Query("DELETE FROM passwords where id =:passwordId")
-    suspend fun deletePassword(passwordId: Long)
+    @Query("SELECT * FROM passwords WHERE folderId = :folderId")
+    suspend fun getByFolder(folderId: Long): List<PasswordEntity>
 
+    @Delete
+    suspend fun delete(password: PasswordEntity)
 
-    //suspend fun exportPasswordsToFile(passwords: List<PasswordEntity>, fileUri: Uri) //cursor в dao
-
-    //suspend fun importPasswordsFromFile(fileUri: Uri): List<PasswordEntity> //cursor dao
+    @Query("DELETE FROM passwords")
+    suspend fun deleteAll()
 
 
 }
