@@ -1,5 +1,6 @@
 package com.example.passwordgenerator.presentation.password_list_fragment
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -118,14 +119,16 @@ class PasswordListFragment : Fragment() {
     private fun copyPasswordToClipboard(password: String) {
         val clipboardManager =
             requireContext().getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("Password", password)
+        val clip = ClipData.newPlainText(getString(R.string.password), password)
         clipboardManager.setPrimaryClip(clip)
-        Toast.makeText(requireContext(), "Пароль скопирован", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), getString(R.string.password_copy), Toast.LENGTH_SHORT).show()
     }
 
 
+    @SuppressLint("StringFormatMatches")
     private fun exportToFile(lines: List<String>) {
-        Toast.makeText(requireContext(), "Экспортировано ${lines.size} паролей", Toast.LENGTH_SHORT)
+        Toast.makeText(requireContext(),
+            getString(R.string.passwords_exported, lines.size), Toast.LENGTH_SHORT)
             .show()
     }
 

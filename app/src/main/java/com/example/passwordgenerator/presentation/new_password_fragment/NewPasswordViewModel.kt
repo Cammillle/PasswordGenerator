@@ -6,6 +6,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.passwordgenerator.R
 import com.example.passwordgenerator.domain.model.Password
 import com.example.passwordgenerator.domain.model.PasswordFolder
 import com.example.passwordgenerator.domain.usecase.InsertFolderUseCase
@@ -36,10 +37,10 @@ class NewPasswordViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    private val lowercase = "abcdefghijklmnopqrstuvwxyz"   //создать строковые ресурсы
-    private val uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    private val numbers = "0123456789"
-    private val special = "!@#$%^&*()-_=+[]{}|;:,.<>?/"
+    private val lowercase = application.getString(R.string.lower_case)
+    private val uppercase = application.getString(R.string.upper_case)
+    private val numbers = application.getString(R.string.numbers)
+    private val special = application.getString(R.string.special)
     private var allowedChars = ""
 
     fun generatePassword(
