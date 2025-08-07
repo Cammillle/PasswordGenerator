@@ -11,7 +11,6 @@ import com.example.passwordgenerator.databinding.ActivityMainBinding
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +18,6 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         lifecycleScope.launch {
             if(applicationContext.isFirstRun()){
@@ -72,6 +70,5 @@ class MainActivity : AppCompatActivity() {
         }
         return isFirst
     }
-
 
 }

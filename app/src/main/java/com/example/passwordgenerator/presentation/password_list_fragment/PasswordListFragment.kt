@@ -1,6 +1,8 @@
 package com.example.passwordgenerator.presentation.password_list_fragment
 
+import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.Context
 import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,28 +14,31 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.passwordgenerator.AppApplication
 import com.example.passwordgenerator.R
 import com.example.passwordgenerator.databinding.FragmentPasswordListBinding
 import com.example.passwordgenerator.domain.model.PasswordListItem
 import com.example.passwordgenerator.domain.model.PasswordListUiState
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class PasswordListFragment : Fragment() {
 
     private var _binding: FragmentPasswordListBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: PasswordListViewModel by lazy {
-        val clipboardManager = requireContext().getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-        ViewModelProvider(
-            this,
-            PasswordListViewModelFactory(requireActivity().application, clipboardManager)
-        )[PasswordListViewModel::class.java]
-    }
+    @Inject
+    lateinit var viewModelFactory: PasswordListViewModelFactory
+
+    private lateinit var viewModel: PasswordListViewModel
 
     private lateinit var listAdapter: PasswordListAdapter
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as AppApplication).component.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -44,7 +49,7 @@ class PasswordListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        viewModel = ViewModelProvider(this, viewModelFactory)[PasswordListViewModel::class.java]
         setupRecyclerView()
         observeUiState()
 
@@ -77,7 +82,7 @@ class PasswordListFragment : Fragment() {
                         binding.buttonBack.visibility = View.GONE
                         val items = state.folders.map { PasswordListItem.FolderItem(it) } +
                                 state.passwords.map { PasswordListItem.PasswordItem(it) }
-                        listAdapter.submitList(items)   ///передавать лист через state
+                        listAdapter.submitList(items)
                     }
 
                     is PasswordListUiState.FolderContent -> {
@@ -96,7 +101,7 @@ class PasswordListFragment : Fragment() {
     private fun setupRecyclerView() {
         listAdapter = PasswordListAdapter(
             onFolderClick = { folder -> viewModel.openFolder(folder) },
-            onCopyClick = { password -> viewModel.copyPasswordToClipboard(password.value) }, ///&
+            onCopyClick = { password -> copyPasswordToClipboard(password.value) },
             onDeleteClick = { password -> viewModel.deletePassword(password) }
         )
 
@@ -109,6 +114,15 @@ class PasswordListFragment : Fragment() {
             }
         }
     }
+
+    private fun copyPasswordToClipboard(password: String) {
+        val clipboardManager =
+            requireContext().getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("Password", password)
+        clipboardManager.setPrimaryClip(clip)
+        Toast.makeText(requireContext(), "Пароль скопирован", Toast.LENGTH_SHORT).show()
+    }
+
 
     private fun exportToFile(lines: List<String>) {
         Toast.makeText(requireContext(), "Экспортировано ${lines.size} паролей", Toast.LENGTH_SHORT)

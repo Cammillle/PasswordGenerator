@@ -6,8 +6,9 @@ import com.example.passwordgenerator.data.entity.PasswordFolderEntity.Companion.
 import com.example.passwordgenerator.data.entity.PasswordFolderEntity.Companion.toEntity
 import com.example.passwordgenerator.domain.model.PasswordFolder
 import com.example.passwordgenerator.domain.repository.PasswordFolderRepository
+import javax.inject.Inject
 
-class PasswordFolderRepositoryImpl(
+class PasswordFolderRepositoryImpl @Inject constructor(
     application: Application
 ) : PasswordFolderRepository {
 
@@ -21,7 +22,4 @@ class PasswordFolderRepositoryImpl(
         return folderDao.getAll().map { it.toDomainModel() }
     }
 
-    override suspend fun deleteAllFolders() {
-        TODO("Not yet implemented")
-    }
 }

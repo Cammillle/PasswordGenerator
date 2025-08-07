@@ -7,11 +7,8 @@ interface PasswordRepository {
 
     suspend fun insert(password: Password): Long
     suspend fun insertAll(passwords: List<Password>)
-    suspend fun getAll(): List<Password>
     suspend fun getByFolder(folderId: Long): List<Password>
     suspend fun getGenerated(): List<Password>
     suspend fun delete(password: Password)
-    suspend fun deleteAll()
-
 }
 

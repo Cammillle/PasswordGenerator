@@ -1,13 +1,9 @@
 package com.example.passwordgenerator.presentation.password_list_fragment
 
 import android.app.Application
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.passwordgenerator.data.repository.PasswordFolderRepositoryImpl
-import com.example.passwordgenerator.data.repository.PasswordRepositoryImpl
 import com.example.passwordgenerator.domain.model.Password
 import com.example.passwordgenerator.domain.model.PasswordFolder
 import com.example.passwordgenerator.domain.model.PasswordListUiState
@@ -22,20 +18,14 @@ import kotlinx.coroutines.launch
 
 class PasswordListViewModel(
     context: Application,
-    private val clipboardManager: ClipboardManager
-    ) : AndroidViewModel(context) {
+    private val getGeneratedPasswordsUseCase: GetGeneratedPasswordsUseCase,
+    private val deletePasswordUseCase: DeletePasswordUseCase,
+    private val getAllFoldersUseCase:GetAllFoldersUseCase,
+    private val getPasswordsByFolderIdUseCase:GetPasswordsByFolderIdUseCase
+) : AndroidViewModel(context) {
 
     private val _uiState = MutableStateFlow<PasswordListUiState>(PasswordListUiState.Loading)
     val uiState: StateFlow<PasswordListUiState> = _uiState.asStateFlow()
-
-    private val passwordRepository = PasswordRepositoryImpl(context)
-    private val folderRepository = PasswordFolderRepositoryImpl(context)
-
-    private val getGeneratedPasswordsUseCase = GetGeneratedPasswordsUseCase(passwordRepository)
-    private val deletePasswordUseCase = DeletePasswordUseCase(passwordRepository)
-    private val getAllFoldersUseCase = GetAllFoldersUseCase(folderRepository)
-    private val getPasswordsByFolderIdUseCase = GetPasswordsByFolderIdUseCase(passwordRepository)
-
 
     private var currentFolder: PasswordFolder? = null
 
@@ -70,16 +60,12 @@ class PasswordListViewModel(
 
     fun deletePassword(password: Password) {
         viewModelScope.launch {
-            Log.d("TEST_TEST",password.toString())
+            Log.d("TEST_TEST", password.toString())
             deletePasswordUseCase(password)
             refreshCurrentState()
         }
     }
 
-    fun copyPasswordToClipboard(password: String) {
-        val clip = ClipData.newPlainText("Password", password)
-        clipboardManager.setPrimaryClip(clip)
-    }
 
     private fun refreshCurrentState() {
         if (currentFolder == null) {
@@ -100,11 +86,6 @@ class PasswordListViewModel(
             onFileReady(lines)
         }
     }
-
-
-
-
-
 
 
 }

@@ -7,5 +7,4 @@ interface PasswordFolderRepository {
 
     suspend fun insertFolder(folder: PasswordFolder): Long
     suspend fun getAllFolders(): List<PasswordFolder>
-    suspend fun deleteAllFolders()
 }

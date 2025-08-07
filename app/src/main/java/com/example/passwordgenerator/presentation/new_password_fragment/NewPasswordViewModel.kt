@@ -6,8 +6,6 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.passwordgenerator.data.repository.PasswordFolderRepositoryImpl
-import com.example.passwordgenerator.data.repository.PasswordRepositoryImpl
 import com.example.passwordgenerator.domain.model.Password
 import com.example.passwordgenerator.domain.model.PasswordFolder
 import com.example.passwordgenerator.domain.usecase.InsertFolderUseCase
@@ -19,11 +17,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.math.log2
 
-
-class NewPasswordViewModel(
-    application: Application
+class NewPasswordViewModel @Inject constructor(
+    application: Application,
+    private val insertPasswordUseCase: InsertPasswordUseCase,
+    private val insertPasswordsUseCase: InsertPasswordsUseCase,
+    private val insertFolderUseCase: InsertFolderUseCase
 ) : AndroidViewModel(application) {
 
     private val _generatedPassword = MutableStateFlow("")
@@ -41,19 +42,8 @@ class NewPasswordViewModel(
     private val special = "!@#$%^&*()-_=+[]{}|;:,.<>?/"
     private var allowedChars = ""
 
-    private val passwordRepository = PasswordRepositoryImpl(application)
-    private val folderRepository = PasswordFolderRepositoryImpl(application)
-
-    private val insertPasswordUseCase = InsertPasswordUseCase(passwordRepository)
-    private val insertPasswordsUseCase = InsertPasswordsUseCase(passwordRepository)
-
-    private val insertFolderUseCase = InsertFolderUseCase(folderRepository)
-
     fun generatePassword(
-        length: Int,
-        useUppercase: Boolean,
-        useNumbers: Boolean,
-        useSpecial: Boolean
+        length: Int, useUppercase: Boolean, useNumbers: Boolean, useSpecial: Boolean
     ) {
 
         allowedChars = buildCharacterSet(useUppercase, useNumbers, useSpecial)
@@ -65,9 +55,7 @@ class NewPasswordViewModel(
             return
         }
 
-        val password = (1..length)
-            .map { allowedChars.random() }
-            .joinToString("")
+        val password = (1..length).map { allowedChars.random() }.joinToString("")
 
         val entropyValue = password.length * log2(allowedChars.length.toDouble())
 
@@ -76,9 +64,7 @@ class NewPasswordViewModel(
     }
 
     private fun buildCharacterSet(
-        useUppercase: Boolean,
-        useNumbers: Boolean,
-        useSpecial: Boolean
+        useUppercase: Boolean, useNumbers: Boolean, useSpecial: Boolean
     ): String {
         val set = StringBuilder().append(lowercase)
         if (useUppercase) set.append(uppercase)
@@ -113,11 +99,9 @@ class NewPasswordViewModel(
     fun importPasswordsFromFile(context: Context, uri: Uri) {
         viewModelScope.launch {
             try {
-                val lines = context.contentResolver.openInputStream(uri)
-                    ?.bufferedReader()
-                    ?.readLines()
-                    ?.filter { it.isNotBlank() }
-                    ?: emptyList()
+                val lines =
+                    context.contentResolver.openInputStream(uri)?.bufferedReader()?.readLines()
+                        ?.filter { it.isNotBlank() } ?: emptyList()
 
                 val folderId =  //Загружаем папку
                     insertFolderUseCase(
@@ -128,7 +112,9 @@ class NewPasswordViewModel(
 
                 val passwordList = lines.map { line ->
                     val entropy = calculateEntropy(line)
-                    Password(value = line, entropy = entropy, characterSet = null , folderId = folderId)
+                    Password(
+                        value = line, entropy = entropy, characterSet = null, folderId = folderId
+                    )
                 }
                 Log.d("TEST_TEST", "${passwordList.toList()}")
                 insertPasswordsUseCase(passwordList)  //загружаем пароли и присваиваем им folderId
@@ -145,8 +131,7 @@ class NewPasswordViewModel(
             if (password.any { it.isLowerCase() }) addAll('a'..'z')
             if (password.any { it.isUpperCase() }) addAll('A'..'Z')
             if (password.any { it.isDigit() }) addAll('0'..'9')
-            if (password.any { special.contains(it) })
-                addAll(special.toSet())
+            if (password.any { special.contains(it) }) addAll(special.toSet())
         }.size
 
         return String.format("%.2f", password.length * log2(poolSize.toDouble())).toDouble()

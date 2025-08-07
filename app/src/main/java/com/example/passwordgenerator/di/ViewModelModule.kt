@@ -1,24 +1,52 @@
 package com.example.passwordgenerator.di
 
-import androidx.lifecycle.ViewModel
-import com.example.passwordgenerator.presentation.new_password_fragment.NewPasswordViewModel
-import com.example.passwordgenerator.presentation.password_list_fragment.PasswordListViewModel
-import dagger.Binds
+import android.app.Application
+import com.example.passwordgenerator.domain.usecase.DeletePasswordUseCase
+import com.example.passwordgenerator.domain.usecase.GetAllFoldersUseCase
+import com.example.passwordgenerator.domain.usecase.GetGeneratedPasswordsUseCase
+import com.example.passwordgenerator.domain.usecase.GetPasswordsByFolderIdUseCase
+import com.example.passwordgenerator.domain.usecase.InsertFolderUseCase
+import com.example.passwordgenerator.domain.usecase.InsertPasswordUseCase
+import com.example.passwordgenerator.domain.usecase.InsertPasswordsUseCase
+import com.example.passwordgenerator.presentation.new_password_fragment.NewPasswordViewModelFactory
+import com.example.passwordgenerator.presentation.password_list_fragment.PasswordListViewModelFactory
 import dagger.Module
-import dagger.multibindings.IntoMap
+import dagger.Provides
 
 @Module
-interface ViewModelModule {
+class ViewModelModule {
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(NewPasswordViewModel::class)
-    fun bindMainViewModel(viewModel: NewPasswordViewModel): ViewModel
+    @Provides
+    fun providePasswordListViewModelFactory(
+        application: Application,
+        getGeneratedPasswordsUseCase: GetGeneratedPasswordsUseCase,
+        deletePasswordUseCase: DeletePasswordUseCase,
+        getAllFoldersUseCase: GetAllFoldersUseCase,
+        getPasswordsByFolderIdUseCase: GetPasswordsByFolderIdUseCase
+    ): PasswordListViewModelFactory {
+        return PasswordListViewModelFactory(
+            application,
+            getGeneratedPasswordsUseCase,
+            deletePasswordUseCase,
+            getAllFoldersUseCase,
+            getPasswordsByFolderIdUseCase
+        )
+    }
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(PasswordListViewModel::class)
-    fun bindShopItemViewModel(viewModel: PasswordListViewModel): ViewModel
+    @Provides
+    fun provideNewPasswordViewModelFactory(
+        application: Application,
+        insertPasswordUseCase: InsertPasswordUseCase,
+        insertPasswordsUseCase: InsertPasswordsUseCase,
+        insertFolderUseCase: InsertFolderUseCase
+    ): NewPasswordViewModelFactory {
+        return NewPasswordViewModelFactory(
+            application,
+            insertPasswordUseCase,
+            insertPasswordsUseCase,
+            insertFolderUseCase
+        )
+    }
 
 
 }

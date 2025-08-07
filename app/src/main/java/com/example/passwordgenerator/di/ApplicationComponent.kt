@@ -6,6 +6,7 @@ import com.example.passwordgenerator.presentation.password_list_fragment.Passwor
 import dagger.BindsInstance
 import dagger.Component
 
+@ApplicationScope
 @Component(modules = [DataModule::class, ViewModelModule::class])
 interface ApplicationComponent {
 
