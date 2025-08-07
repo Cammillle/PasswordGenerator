@@ -40,18 +40,19 @@ class PasswordListViewModel(
     private var currentFolder: PasswordFolder? = null
 
     init {
-        _uiState.value = PasswordListUiState.Loading
         loadRoot()
     }
 
     fun loadRoot() {
         viewModelScope.launch {
+            _uiState.value = PasswordListUiState.Loading
             val folders = getAllFoldersUseCase()
             val passwords = getGeneratedPasswordsUseCase()
             currentFolder = null
             _uiState.value = PasswordListUiState.Root(folders, passwords)
         }
     }
+
 
     fun openFolder(folder: PasswordFolder) {
         viewModelScope.launch {
