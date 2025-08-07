@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.passwordgenerator.R
 import com.example.passwordgenerator.domain.model.Password
 import com.example.passwordgenerator.domain.model.PasswordFolder
-import com.example.passwordgenerator.domain.model.PasswordListItem
+import com.example.passwordgenerator.presentation.PasswordListItem
 
 class PasswordListAdapter(
     private val onFolderClick: (PasswordFolder) -> Unit,

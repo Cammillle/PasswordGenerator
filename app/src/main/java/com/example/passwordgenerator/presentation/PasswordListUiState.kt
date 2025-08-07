@@ -1,4 +1,7 @@
-package com.example.passwordgenerator.domain.model
+package com.example.passwordgenerator.presentation
+
+import com.example.passwordgenerator.domain.model.Password
+import com.example.passwordgenerator.domain.model.PasswordFolder
 
 sealed class PasswordListUiState {
 

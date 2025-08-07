@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.passwordgenerator.domain.model.Password
 import com.example.passwordgenerator.domain.model.PasswordFolder
-import com.example.passwordgenerator.domain.model.PasswordListUiState
+import com.example.passwordgenerator.presentation.PasswordListUiState
 import com.example.passwordgenerator.domain.usecase.DeletePasswordUseCase
 import com.example.passwordgenerator.domain.usecase.GetAllFoldersUseCase
 import com.example.passwordgenerator.domain.usecase.GetGeneratedPasswordsUseCase

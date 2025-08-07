@@ -1,7 +1,7 @@
 package com.example.passwordgenerator.presentation.password_list_fragment
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.passwordgenerator.domain.model.PasswordListItem
+import com.example.passwordgenerator.presentation.PasswordListItem
 
 class PasswordListDiffCallback : DiffUtil.ItemCallback<PasswordListItem>() {
     override fun areItemsTheSame(old: PasswordListItem, new: PasswordListItem): Boolean {

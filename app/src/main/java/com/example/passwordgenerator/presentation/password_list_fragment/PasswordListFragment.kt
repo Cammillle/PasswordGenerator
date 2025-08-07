@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.passwordgenerator.AppApplication
 import com.example.passwordgenerator.R
 import com.example.passwordgenerator.databinding.FragmentPasswordListBinding
-import com.example.passwordgenerator.domain.model.PasswordListItem
-import com.example.passwordgenerator.domain.model.PasswordListUiState
+import com.example.passwordgenerator.presentation.PasswordListItem
+import com.example.passwordgenerator.presentation.PasswordListUiState
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
