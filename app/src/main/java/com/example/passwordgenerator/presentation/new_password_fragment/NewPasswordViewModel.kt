@@ -39,6 +39,7 @@ class NewPasswordViewModel(
     private val uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     private val numbers = "0123456789"
     private val special = "!@#$%^&*()-_=+[]{}|;:,.<>?/"
+    private var allowedChars = ""
 
     private val passwordRepository = PasswordRepositoryImpl(application)
     private val folderRepository = PasswordFolderRepositoryImpl(application)
@@ -55,10 +56,7 @@ class NewPasswordViewModel(
         useSpecial: Boolean
     ) {
 
-        var allowedChars = lowercase
-        if (useUppercase) allowedChars += uppercase  //переделать контакенацию
-        if (useNumbers) allowedChars += numbers
-        if (useSpecial) allowedChars += special
+        allowedChars = buildCharacterSet(useUppercase, useNumbers, useSpecial)
 
         if (length <= 0) {
             viewModelScope.launch {
@@ -77,6 +75,18 @@ class NewPasswordViewModel(
         _entropy.value = String.format("%.2f", entropyValue)
     }
 
+    private fun buildCharacterSet(
+        useUppercase: Boolean,
+        useNumbers: Boolean,
+        useSpecial: Boolean
+    ): String {
+        val set = StringBuilder().append(lowercase)
+        if (useUppercase) set.append(uppercase)
+        if (useNumbers) set.append(numbers)
+        if (useSpecial) set.append(special)
+        return set.toString()
+    }
+
     fun saveGeneratedPassword() {
         val password = _generatedPassword.value
         val entropy = _entropy.value.toDoubleOrNull() ?: return
@@ -89,6 +99,7 @@ class NewPasswordViewModel(
                 val entity = Password(
                     value = password,
                     entropy = entropy,
+                    characterSet = allowedChars,
                     folderId = null
                 )
                 insertPasswordUseCase(entity)  //Загрузка пароля в бд
@@ -117,9 +128,9 @@ class NewPasswordViewModel(
 
                 val passwordList = lines.map { line ->
                     val entropy = calculateEntropy(line)
-                    Password(value = line, entropy = entropy, folderId = folderId)
+                    Password(value = line, entropy = entropy, characterSet = null , folderId = folderId)
                 }
-                Log.d("TEST_TEST","${passwordList.toList()}")
+                Log.d("TEST_TEST", "${passwordList.toList()}")
                 insertPasswordsUseCase(passwordList)  //загружаем пароли и присваиваем им folderId
 
                 _eventFlow.emit(UiEvent.Success("Пароли загружены"))

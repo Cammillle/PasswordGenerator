@@ -29,10 +29,15 @@ class PasswordListAdapter(
                 onDeleteClick(password)
             }
 
-
             password.entropy.let {
                 itemView.findViewById<TextView>(R.id.password_entropy).text =
                     "Entropy: %.2f".format(it)
+            }
+
+            password.characterSet?.let {
+                itemView.findViewById<TextView>(R.id.text_charset).visibility = View.VISIBLE
+                itemView.findViewById<TextView>(R.id.text_charset).text =
+                    "Charset: $it"
             }
 
         }
